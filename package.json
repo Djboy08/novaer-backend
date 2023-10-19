@@ -6,7 +6,11 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@lucia-auth/adapter-sqlite": "^2.0.1",
+    "better-sqlite3": "^9.0.0",
+    "elysia": "latest",
+    "lucia": "^2.7.1",
+    "lucia-auth": "^1.8.0"
   },
   "devDependencies": {
     "bun-types": "latest"
