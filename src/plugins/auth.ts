@@ -28,11 +28,10 @@ const validateState = (state: string, roblox_oauth_state: string) => {
 // import { Context } from "elysia";
 
 const initRobloxCallback = async (context: Context) => {
-  const code = context.query["code"]!;
-  const state = context.query["state"]!;
+  const { code, state } = context.query!;
 
   const roblox_oauth_state = context.cookie["roblox_oauth_state"].value;
-  validateState(state, roblox_oauth_state);
+  validateState(state!, roblox_oauth_state);
 
   const roblox_code_verifier = context.cookie["roblox_code_verifier"].value;
 
@@ -42,7 +41,7 @@ const initRobloxCallback = async (context: Context) => {
   async function handleUser() {
     try {
       const robloxUserProvider = await robloxAuth.validateCallback(
-        code,
+        code!,
         roblox_code_verifier
       );
 
@@ -66,23 +65,21 @@ const initRobloxCallback = async (context: Context) => {
       const authRequest = auth.handleRequest(context);
       authRequest.setSession(session);
 
-      //   Create the response
-      let response = new Response(JSON.stringify(user), {
+      //   Get the cookies set in the context via authRequest
+      const currentHeaders = context.set.headers["Set-Cookie"] as Array<string>;
+
+      //   Place the cookies in a new response so its properly updated when you login
+      const headers = new Headers([["Location", "http://localhost:3000/auth"]]);
+      currentHeaders.forEach((cookie) => headers.append("Set-Cookie", cookie));
+      return new Response(JSON.stringify(user), {
         status: 302,
+        headers,
       });
-      //   Get the Cookies returned by roblox and set them for the client.
-      (context.set.headers["Set-Cookie"] as string[]).forEach((cookie) => {
-        console.log(cookie);
-        response.headers.append("Set-Cookie", cookie);
-      });
-      //   Redirect the user to the home page
-      response.headers.set("Location", "http://localhost:3000/".toString());
-      return response;
     } catch (e) {
       // invalid code or code verifier
       console.log(e);
     }
-    return Response.redirect("http://localhost:3000/".toString());
+    return Response.redirect("http://localhost:3000/auth".toString());
   }
 
   return handleUser();
@@ -110,7 +107,9 @@ export const authPlugin = new Elysia().group("/auth", (app) =>
             roblox_oauth_state: t.String(),
             roblox_code_verifier: t.String(),
           }),
-          value: t.String(),
+          value: t.String({
+            minLength: 1,
+          }),
         }),
       }
     )
