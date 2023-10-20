@@ -72,6 +72,7 @@ const initRobloxCallback = async (context: Context) => {
       });
       //   Get the Cookies returned by roblox and set them for the client.
       (context.set.headers["Set-Cookie"] as string[]).forEach((cookie) => {
+        console.log(cookie);
         response.headers.append("Set-Cookie", cookie);
       });
       //   Redirect the user to the home page
