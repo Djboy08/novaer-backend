@@ -79,7 +79,7 @@ const initRobloxCallback = async (context: Context) => {
       // invalid code or code verifier
       console.log(e);
     }
-    return Response.redirect("http://localhost:3000/auth".toString());
+    return Response.redirect("http://localhost:3000/auth".toString(), 302);
   }
 
   return handleUser();

@@ -3,19 +3,27 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "generate": "drizzle-kit generate:mysql --config=configs/drizzle.config.ts",
+    "introspect": "drizzle-kit introspect:mysql --config=configs/drizzle.config.ts",
+    "push": "drizzle-kit push:mysql --config=configs/drizzle.config.ts",
+    "drop": "drizzle-kit drop --config=configs/drizzle.config.ts",
+    "migrate": "bun run src/db/migrate.ts"
   },
   "dependencies": {
     "@elysiajs/swagger": "^0.7.3",
-    "@lucia-auth/adapter-sqlite": "^2.0.1",
+    "@lucia-auth/adapter-mysql": "^2.1.0",
     "@lucia-auth/oauth": "^3.3.1",
-    "better-sqlite3": "^9.0.0",
+    "@planetscale/database": "^1.11.0",
+    "drizzle-orm": "^0.28.6",
     "elysia": "latest",
     "lucia": "^2.7.1",
     "lucia-auth": "^1.8.0"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "dotenv": "^16.3.1",
+    "drizzle-kit": "^0.19.13"
   },
   "module": "src/index.js"
 }
