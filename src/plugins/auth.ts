@@ -70,7 +70,7 @@ const initRobloxCallback = async (context: Context) => {
 
       //   Place the cookies in a new response so its properly updated when you login
       const headers = new Headers([
-        ["Location", `${process.env.LOCAL_HOST}/auth`],
+        ["Location", `${process.env.LOCAL_URL}/auth`],
       ]);
       currentHeaders.forEach((cookie) => headers.append("Set-Cookie", cookie));
       return new Response(JSON.stringify(user), {
@@ -81,7 +81,7 @@ const initRobloxCallback = async (context: Context) => {
       // invalid code or code verifier
       console.log(e);
     }
-    return Response.redirect(`${process.env.LOCAL_HOST}/auth`.toString(), 302);
+    return Response.redirect(`${process.env.LOCAL_URL}/auth`.toString(), 302);
   }
 
   return handleUser();
