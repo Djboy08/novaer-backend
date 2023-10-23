@@ -46,7 +46,7 @@ export const auth = lucia({
 export const robloxAuth = roblox(auth, {
   clientId: process.env.RBX_CLIENT_ID!,
   clientSecret: process.env.RBX_CLIENT_SECRET!,
-  redirectUri: "http://localhost:3000/auth/callback",
+  redirectUri: `${process.env.LOCAL_HOST!}/auth/callback`,
 });
 
 export type RAuth = typeof robloxAuth;
