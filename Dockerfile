@@ -1,4 +1,4 @@
-FROM jarredsumner/bun:edge AS base
+FROM oven/bun:latest AS base
 
 WORKDIR /app
 
