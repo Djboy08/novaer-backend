@@ -28,7 +28,7 @@ export const roblox = <_Auth extends Auth = Auth>(
 
 export class RobloxAuth<_Auth extends Auth = Auth> {
   private config: Config;
-  private auth;
+  private auth: _Auth;
 
   constructor(auth: _Auth, config: Config) {
     this.config = config;
