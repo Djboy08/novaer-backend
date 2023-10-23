@@ -2,7 +2,7 @@ import {
   createOAuth2AuthorizationUrlWithPKCE,
   validateOAuth2AuthorizationCode,
   ProviderUserAuth,
-  OAuth2ProviderAuthWithPKCE,
+  providerUserAuth,
 } from "@lucia-auth/oauth";
 
 // import {} from "@lucia-auth";
@@ -26,14 +26,13 @@ export const roblox = <_Auth extends Auth = Auth>(
   return new RobloxAuth(auth, config);
 };
 
-export class RobloxAuth<
-  _Auth extends Auth = Auth
-> extends OAuth2ProviderAuthWithPKCE<RobloxUserAuth<_Auth>> {
+export class RobloxAuth<_Auth extends Auth = Auth> {
   private config: Config;
+  private auth;
 
   constructor(auth: _Auth, config: Config) {
-    super(auth);
     this.config = config;
+    this.auth = auth;
   }
 
   public getAuthorizationUrl = async (): Promise<
@@ -88,17 +87,26 @@ export class RobloxAuth<
   };
 }
 
-export class RobloxUserAuth<
-  _Auth extends Auth = Auth
-> extends ProviderUserAuth<_Auth> {
+export class RobloxUserAuth<_Auth extends Auth = Auth> {
   public robloxTokens: RobloxTokens;
   public robloxUser: RobloxUser;
+  public providerUser: ProviderUserAuth;
 
   constructor(auth: _Auth, robloxUser: RobloxUser, robloxTokens: RobloxTokens) {
-    super(auth, PROVIDER_ID, robloxUser.sub);
     this.robloxTokens = robloxTokens;
     this.robloxUser = robloxUser;
+    this.providerUser = providerUserAuth(auth, PROVIDER_ID, robloxUser.sub);
   }
+
+  getExistingUser = async () => {
+    return await this.providerUser.getExistingUser();
+  };
+  createKey = async (userId: string) => {
+    return await this.providerUser.createKey(userId);
+  };
+  createUser = async (options: { userId?: string; attributes: any }) => {
+    return await this.providerUser.createUser(options);
+  };
 }
 
 const getRobloxUser = async (accessToken: string): Promise<RobloxUser> => {
