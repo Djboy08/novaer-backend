@@ -8,6 +8,7 @@ COPY package*.json ./
 COPY . .
 
 RUN bun install
+RUN bun run build
 
 FROM base AS release
 
@@ -19,4 +20,4 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
-CMD ["bun", "run", "start"]
+CMD ["bun", "run", "dev"]
